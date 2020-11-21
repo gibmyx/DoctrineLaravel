@@ -13,6 +13,10 @@
                         OAuth Clients
                     </span>
 
+                    <a class="action-link" tabindex="-1" @click="probando_token">
+                        Probando token
+                    </a>
+
                     <a class="action-link" tabindex="-1" @click="showCreateClientForm">
                         Create New Client
                     </a>
@@ -257,6 +261,8 @@
 </template>
 
 <script>
+
+
     export default {
         /*
          * The component's data.
@@ -264,7 +270,7 @@
         data() {
             return {
                 clients: [],
-
+                token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJjZDEyYzQxYjE0YmU5ZGZlOWRkMmFkZjEzZWZlMmNjMjkxZTU3YzkxYjUxYjdiNzk0ZmY1ZDhmMjI4YmEwNDgwZmRhMjk1ZDVjNWJjMGEiLCJpYXQiOjE2MDQyODI4ODMsIm5iZiI6MTYwNDI4Mjg4MywiZXhwIjoxNjM1ODE4ODgzLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.i3p6jTamQATxG7ZFSIOAZr3cfIYbJ6Uu6x9eIt2F8foMVtWuUynyYPNZ-W29X5uKaMWUuoke8d9Ge3CUcRGtqdXJznZnnoE6Yn-P9uR1pOZ7nAXP9_bZAClFqMK9E09Z8YAF3-zEdwE6vAcEidCVKor_urgwHZasUE0h4IXANviPvVbxLoiwkp8YtrWZ4DNC5dez_UZV8haO3Bj-tOoFdYuw9FGOfSq7rSBPE1zbk2kEFRjxSMQ959V08qxnzuMWRp7LORxQfZMfqghrBaWh3jViBMHKtaE3wz2r8wfHPQUCsMhUtPBcW9e5fr8aYgyJeqcc6I62oLpSjM_m2iUAUrkz9Pv2sQ7SVaaBtNYPM4zxpSzT9huwHMidXzQDqsSEbYT96pMpnBe6vtk0WUUhamEBC9KGOh1tuIWiYeecqXcpFcPY8YYXtzwdu-X3OcSI2feEzeXRswkZNUYplEVa-GMV4Z7D_npow0iIyyNejAD7fCScKj_oueSefztBACJTIcYmjOaB836-fo1koggZrkS7hw0UjLjw1moklQ_W6M0agKSjqSjjS7zaQuL3-fF9HKW2tuBHnoIkhyp-eWRPOJT2fIb4vZpS-TkFYbtxCS8xpyyTW6dSQtxUVRpNoGDe3vEz_KkHbojKB6teX3pPFto-TNDd31O5Ft7EWr8wRrM",
                 clientSecret: null,
 
                 createForm: {
@@ -297,6 +303,15 @@
         },
 
         methods: {
+
+            probando_token() {
+                axios.post('/api/probando_token', '', {
+                    headers: { Authorization: "Bearer " + this.token }
+                }).then((response) => {
+                    this.detalle = response.data;
+                    resolve();
+                });
+            },
             /**
              * Prepare the component.
              */

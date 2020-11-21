@@ -2286,6 +2286,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   /*
    * The component's data.
@@ -2293,6 +2297,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   data: function data() {
     return {
       clients: [],
+      token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJjZDEyYzQxYjE0YmU5ZGZlOWRkMmFkZjEzZWZlMmNjMjkxZTU3YzkxYjUxYjdiNzk0ZmY1ZDhmMjI4YmEwNDgwZmRhMjk1ZDVjNWJjMGEiLCJpYXQiOjE2MDQyODI4ODMsIm5iZiI6MTYwNDI4Mjg4MywiZXhwIjoxNjM1ODE4ODgzLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.i3p6jTamQATxG7ZFSIOAZr3cfIYbJ6Uu6x9eIt2F8foMVtWuUynyYPNZ-W29X5uKaMWUuoke8d9Ge3CUcRGtqdXJznZnnoE6Yn-P9uR1pOZ7nAXP9_bZAClFqMK9E09Z8YAF3-zEdwE6vAcEidCVKor_urgwHZasUE0h4IXANviPvVbxLoiwkp8YtrWZ4DNC5dez_UZV8haO3Bj-tOoFdYuw9FGOfSq7rSBPE1zbk2kEFRjxSMQ959V08qxnzuMWRp7LORxQfZMfqghrBaWh3jViBMHKtaE3wz2r8wfHPQUCsMhUtPBcW9e5fr8aYgyJeqcc6I62oLpSjM_m2iUAUrkz9Pv2sQ7SVaaBtNYPM4zxpSzT9huwHMidXzQDqsSEbYT96pMpnBe6vtk0WUUhamEBC9KGOh1tuIWiYeecqXcpFcPY8YYXtzwdu-X3OcSI2feEzeXRswkZNUYplEVa-GMV4Z7D_npow0iIyyNejAD7fCScKj_oueSefztBACJTIcYmjOaB836-fo1koggZrkS7hw0UjLjw1moklQ_W6M0agKSjqSjjS7zaQuL3-fF9HKW2tuBHnoIkhyp-eWRPOJT2fIb4vZpS-TkFYbtxCS8xpyyTW6dSQtxUVRpNoGDe3vEz_KkHbojKB6teX3pPFto-TNDd31O5Ft7EWr8wRrM",
       clientSecret: null,
       createForm: {
         errors: [],
@@ -2322,6 +2327,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.prepareComponent();
   },
   methods: {
+    probando_token: function probando_token() {
+      var _this = this;
+
+      axios.post('/api/probando_token', '', {
+        headers: {
+          Authorization: "Bearer " + this.token
+        }
+      }).then(function (response) {
+        _this.detalle = response.data;
+        resolve();
+      });
+    },
+
     /**
      * Prepare the component.
      */
@@ -2339,10 +2357,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * Get all of the OAuth clients for the user.
      */
     getClients: function getClients() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get('/oauth/clients').then(function (response) {
-        _this.clients = response.data;
+        _this2.clients = response.data;
       });
     },
 
@@ -2381,11 +2399,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * Persist the client to storage using the given form.
      */
     persistClient: function persistClient(method, uri, form, modal) {
-      var _this2 = this;
+      var _this3 = this;
 
       form.errors = [];
       axios[method](uri, form).then(function (response) {
-        _this2.getClients();
+        _this3.getClients();
 
         form.name = '';
         form.redirect = '';
@@ -2393,7 +2411,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         $(modal).modal('hide');
 
         if (response.data.plainSecret) {
-          _this2.showClientSecret(response.data.plainSecret);
+          _this3.showClientSecret(response.data.plainSecret);
         }
       })["catch"](function (error) {
         if (_typeof(error.response.data) === 'object') {
@@ -2416,10 +2434,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * Destroy the given client.
      */
     destroy: function destroy(client) {
-      var _this3 = this;
+      var _this4 = this;
 
       axios["delete"]('/oauth/clients/' + client.id).then(function (response) {
-        _this3.getClients();
+        _this4.getClients();
       });
     }
   }
@@ -39207,6 +39225,16 @@ var render = function() {
               {
                 staticClass: "action-link",
                 attrs: { tabindex: "-1" },
+                on: { click: _vm.probando_token }
+              },
+              [_vm._v("\n                    Probando token\n                ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                staticClass: "action-link",
+                attrs: { tabindex: "-1" },
                 on: { click: _vm.showCreateClientForm }
               },
               [
@@ -52545,6 +52573,13 @@ try {
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+var token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+} else {
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
